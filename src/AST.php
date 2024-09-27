@@ -22,7 +22,6 @@ class AST {
         //TODO Werte in Klammern werden zuerest ausgerechnet!
         // Wurzelrechnung, Hochrechnung, ...
 
-        echo 1;
 
 
         preg_match_all($this->aPattern['getEverySign'], str_replace(' ', '', $sCalculatedString), $aMatches);
