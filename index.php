@@ -6,6 +6,5 @@ use Calculate\AST;
 
 
 $oCalculate = new AST();
-$iCalculatedNumber = $oCalculate->calculate("2*3*(5-6)");
-
+$iCalculatedNumber = $oCalculate->calculate("(4*12)/4(3*4)");
 echo $iCalculatedNumber;
