@@ -1,7 +1,21 @@
 {
+  "name": "phpcalc/phpast",
+  "description": "AST for calculation",
+  "type": "library",
+  "require": {
+    "php": ">=7.2 || ^8.0"
+  },
   "autoload": {
     "psr-4": {
       "Calculate\\": "src/"
     }
-  }
+  },
+  "authors": [
+    {
+      "name": "Timo",
+      "email": ""
+    }
+  ],
+  "minimum-stability": "stable",
+  "license": "MIT"
 }
