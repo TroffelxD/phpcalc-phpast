@@ -23,27 +23,56 @@ class AST {
         // Wurzelrechnung, Hochrechnung, ...
 
 
+        preg_match($this->aPattern['getSpaceBeforeBracket'], $sCalculatedString, $aBracketMatches);
+        preg_match_all($this->aPattern['getBracket'], $sCalculatedString, $a);
+        $iCount = count($a[0]);
 
-        preg_match_all($this->aPattern['getEverySign'], str_replace(' ', '', $sCalculatedString), $aMatches);
 
-        $aSortedSigns = [];
+        for($i = 0; $i < $iCount; $i++) {
+            preg_match($this->aPattern['getSpaceBeforeBracket'], $sCalculatedString, $aBracketMatches);
+            if(!empty($aBracketMatches[0])) {
+                $sCalculatedString = str_replace($aBracketMatches[0], $aBracketMatches[1] . '*' . $aBracketMatches[2], $sCalculatedString);
+            }
+            $sCalculatedString = str_replace($a[0][$i] ,$this->calculation($a[0][$i], true), $sCalculatedString);
+        }
+
+        return $this->calculation($sCalculatedString);
+    }
+
+    public function calculation($sCalculationString, $bBrackets = false) :string{
+
+
+        if($bBrackets){;
+            $sCalculationString = str_replace('(', '', $sCalculationString);
+            $sCalculationString = str_replace(')', '', $sCalculationString);
+        }
+
+        preg_match_all($this->aPattern['getEverySign'], str_replace(' ', '', $sCalculationString), $aMatches);
+
+
+
+        $aSortedMulti = [];
+        $aSortedSimple = [];
 
         foreach ($aMatches as $aSigns){
             foreach ($aSigns as $sSign) {
                 if($sSign == "*" or $sSign == "/"){
-                    array_unshift($aSortedSigns, $sSign);
+                    $aSortedMulti[] = $sSign;
+                    #array_unshift($aSortedSigns, $sSign);
                 } else {
-                    $aSortedSigns[] = $sSign;
+                    $aSortedSimple[] = $sSign;
+                    #$aSortedSigns[] = $sSign;
                 }
             }
         }
 
+        $aSortedSigns = array_merge($aSortedMulti, $aSortedSimple);
 
         foreach ($aSortedSigns as $sSign) {
-            $sCalculatedString = $this->calculateStep($sCalculatedString, $sSign);
+            $sCalculationString = $this->calculateStep($sCalculationString, $sSign);
         }
 
-        return $sCalculatedString;
+        return $sCalculationString;
     }
 
     private function calculateStep ($sCalculation, $Sign) :string{
@@ -81,7 +110,8 @@ class AST {
             'getNumberAfter*' => '/(?<=\*)\d+/',
             'getNumberBefore/' => '/\d+(?=\/)/',
             'getNumberAfter/' => '/(?<=\/)\d+/',
-            'getBracket' => "/\((.*?)\)/",
+            'getBracket' => "/\(.*?\)/",
+            'getSpaceBeforeBracket' => '/(\d+)(\s*\()/',
         ];
     }
 }
